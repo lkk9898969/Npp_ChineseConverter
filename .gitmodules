@@ -4,3 +4,4 @@
 [submodule "libarchive"]
 	path = libarchive
 	url = https://github.com/libarchive/libarchive.git
+	branch = v3.8.1
