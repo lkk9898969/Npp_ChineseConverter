@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\src\Main.cpp" />
+    <ClCompile Include="..\src\PluginDefinition.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\PluginDefinition.h" />
+    <ClInclude Include="..\nppsys\menuCmdID.h">
+      <Filter>Npp System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\nppsys\Notepad_plus_msgs.h">
+      <Filter>Npp System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\nppsys\PluginInterface.h">
+      <Filter>Npp System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\nppsys\Sci_Position.h">
+      <Filter>Npp System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\nppsys\Scintilla.h">
+      <Filter>Npp System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\BasicInclude.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\src\ChineseConverter.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Npp System">
+      <UniqueIdentifier>{93e8df3e-d716-4b80-92bc-1def8dd1b64d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
