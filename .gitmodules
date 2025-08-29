@@ -1,0 +1,6 @@
+[submodule "OpenCC"]
+	path = OpenCC
+	url = https://github.com/BYVoid/OpenCC.git
+[submodule "libarchive"]
+	path = libarchive
+	url = https://github.com/libarchive/libarchive.git
