@@ -447,3 +447,4 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+/dict
