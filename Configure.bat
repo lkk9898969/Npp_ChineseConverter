@@ -1,5 +1,7 @@
+%~d0
+cd %~dp0
 cd .\OpenCC
-start "" "cmd" /C cmake -S. -Bbuild -DCMAKE_INSTALL_PREFIX:PATH=. -DBUILD_SHARED_LIBS=OFF
+start "" "cmd" "/C cmake -S. -Bbuild -DCMAKE_INSTALL_PREFIX:PATH=. -DBUILD_SHARED_LIBS=OFF && cmake --build build --config Release --target Dictionaries"
 cd ..\liblzma
 cmake -Bbuild -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=build
 cmake --build build --config Release --target install

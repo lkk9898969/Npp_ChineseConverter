@@ -170,7 +170,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\OpenCC\src;$(ProjectDir)..\nppsys;$(ProjectDir)..\libarchive\libarchive;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\OpenCC\src;$(ProjectDir)..\nppsys;$(ProjectDir)..\libarchive\libarchive;$(ProjectDir)..\dict;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -229,7 +229,7 @@ copy ..\readme.FIRST ..\bin\readme.FIRST</Command>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\OpenCC\src;$(ProjectDir)..\nppsys;$(ProjectDir)..\libarchive\libarchive;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\OpenCC\src;$(ProjectDir)..\nppsys;$(ProjectDir)..\libarchive\libarchive;$(ProjectDir)..\dict;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
