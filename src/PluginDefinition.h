@@ -41,6 +41,7 @@ typedef enum TRANSLATE_MODE
 
 constexpr TCHAR TRANSLATE_MODE_NAME[][7]
 {
+	TEXT(""), // 0. 未使用
 	TEXT("s2t"), // 簡體到繁體
 	TEXT("s2tw"), // 簡體到台灣正體
 	TEXT("s2hk"), // 簡體到香港繁體
@@ -69,7 +70,7 @@ const TCHAR NPP_PLUGIN_NAME[]
 //
 // Here define the number of your plugin commands
 //
-const int nbFunc = 4;
+const int nbFunc = 6;
 
 
 //
@@ -94,16 +95,5 @@ void commandMenuInit();
 //
 void commandMenuCleanUp();
 
-//
-// Function which sets your command 
-//
-bool setCommand(size_t index, TCHAR* cmdName, PFUNCPLUGINCMD pFunc, ShortcutKey* sk = NULL, bool check0nInit = false);
-
-
-//
-// Your plugin command functions
-//
-void hello();
-void helloDlg();
 
 #endif //PLUGINDEFINITION_H

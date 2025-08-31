@@ -34,6 +34,7 @@
     <ClInclude Include="..\nppsys\Sci_Position.h" />
     <ClInclude Include="..\src\BasicInclude.hpp" />
     <ClInclude Include="..\src\PluginDefinition.h" />
+    <ClInclude Include="..\src\resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Main.cpp" />
@@ -226,7 +227,7 @@ copy ..\readme.FIRST ..\bin\readme.FIRST</Command>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>Opencc_BUILT_AS_STATIC;LIBARCHIVE_STATIC;HAVE_CONFIG_H;WIN32;NDEBUG;_WINDOWS;_USRDLL;NPPPLUGINTEMPLATE_EXPORTS;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS=1;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir)..\OpenCC\src;$(ProjectDir)..\nppsys;$(ProjectDir)..\libarchive\libarchive;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -241,7 +242,7 @@ copy ..\readme.FIRST ..\bin\readme.FIRST</Command>
     </Link>
     <PostBuildEvent>
       <Command>copy ..\license.txt ..\bin64\license.txt
-copy ..\readme.FIRST ..\bin64\readme.FIRST</Command>
+copy ..\readme.md ..\bin64\readme.md</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">

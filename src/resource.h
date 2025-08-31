@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ 產生的 Include 檔案。
-// 由 NppPluginDemo.rc 使用
+// 由 ChineseConverter.rc 使用
 //
 #define SW_HIDE                         0
 #define HIDE_WINDOW                     0
