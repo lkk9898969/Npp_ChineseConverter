@@ -28,5 +28,5 @@ if __name__ == "__main__":
         print(f"File not found: {_7z}")
         exit(1)
     output = file_to_c_array(_7z, "opencc_data")
-    with open(root / "src" / "opencc_data.h", "w") as f:
+    with open(root / "dict" / "opencc_data.h", "w") as f:
         f.write(output)
