@@ -5,3 +5,7 @@
 	path = libarchive
 	url = https://github.com/libarchive/libarchive.git
 	branch = v3.8.1
+[submodule "liblzma"]
+	path = liblzma
+	url = https://github.com/ShiftMediaProject/liblzma.git
+	branch = v5.8.1

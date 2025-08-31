@@ -23,12 +23,45 @@
 //
 #include "PluginInterface.h"
 
+typedef enum TRANSLATE_MODE
+{
+	SC2TC = 1, // 簡體到繁體
+	SC2TW, // 簡體到台灣正體
+	SC2HK, // 簡體到香港繁體
+	S2TWP, // 簡體到台灣正體(含用詞)
+	TC2SC, // 繁體到簡體
+	TC2TW, // 繁體到台灣正體
+	TC2HK, // 繁體到香港繁體
+	TW2SC, // 台灣正體到簡體
+	TW2TC, // 台灣正體到繁體
+	TW2SP, // 台灣正體到簡體(含用詞)
+	HK2SC, // 香港繁體到簡體
+	HK2TC, // 香港繁體到繁體
+} TRANSLATE_MODE;
+
+constexpr TCHAR TRANSLATE_MODE_NAME[][7]
+{
+	TEXT("s2t"), // 簡體到繁體
+	TEXT("s2tw"), // 簡體到台灣正體
+	TEXT("s2hk"), // 簡體到香港繁體
+	TEXT("s2twp"), // 簡體到台灣正體(含用詞)
+	TEXT("t2s"), // 繁體到簡體
+	TEXT("t2tw"), // 繁體到台灣正體
+	TEXT("t2hk"), // 繁體到香港繁體
+	TEXT("tw2s"), // 台灣正體到簡體
+	TEXT("tw2t"), // 台灣正體到繁體
+	TEXT("tw2sp"), // 台灣正體到簡體(含用詞)
+	TEXT("hk2s"), // 香港繁體到簡體
+	TEXT("hk2t"), // 香港繁體到繁體
+};
+
 //-------------------------------------//
 //-- STEP 1. DEFINE YOUR PLUGIN NAME --//
 //-------------------------------------//
 // Here define your plugin name
 //
-const TCHAR NPP_PLUGIN_NAME[] = TEXT("Chinese Converter");
+const TCHAR NPP_PLUGIN_NAME[]
+	= TEXT("Chinese Converter");
 
 //-----------------------------------------------//
 //-- STEP 2. DEFINE YOUR PLUGIN COMMAND NUMBER --//
@@ -36,7 +69,7 @@ const TCHAR NPP_PLUGIN_NAME[] = TEXT("Chinese Converter");
 //
 // Here define the number of your plugin commands
 //
-const int nbFunc = 2;
+const int nbFunc = 4;
 
 
 //
@@ -64,7 +97,7 @@ void commandMenuCleanUp();
 //
 // Function which sets your command 
 //
-bool setCommand(size_t index, TCHAR *cmdName, PFUNCPLUGINCMD pFunc, ShortcutKey *sk = NULL, bool check0nInit = false);
+bool setCommand(size_t index, TCHAR* cmdName, PFUNCPLUGINCMD pFunc, ShortcutKey* sk = NULL, bool check0nInit = false);
 
 
 //
