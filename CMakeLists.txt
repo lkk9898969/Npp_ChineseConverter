@@ -4,6 +4,8 @@ project(NppChineseConverter LANGUAGES CXX C)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+include(ExternalProject)
+
 # Initialize Submodules
 find_package(Git QUIET)
 if(GIT_FOUND AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.git")
@@ -20,17 +22,55 @@ if(GIT_FOUND AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.git")
     endif()
 endif()
 
-# Compile dependent libraries
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
-add_subdirectory(deps/liblzma)
-list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/deps/liblzma")
-set(ENABLE_TESTS OFF CACHE BOOL "" FORCE)
-set(ENABLE_CAT OFF CACHE BOOL "" FORCE)
-set(ENABLE_TAR OFF CACHE BOOL "" FORCE)
-add_subdirectory(deps/libarchive)
+# Define a common installation directory for external project dependencies
+set(STAGING_DIR ${CMAKE_BINARY_DIR}/deps_install)
+message(STATUS "Dependencies will be installed to: ${STAGING_DIR}")
+
+# Define liblzma and libarchive as an external project
+# Because libarchive need liblzma library in configure step.
+ExternalProject_Add(liblzma_ep
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/deps/liblzma
+    CMAKE_ARGS
+        -DCMAKE_INSTALL_PREFIX=${STAGING_DIR}
+        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+        -DBUILD_SHARED_LIBS=OFF
+    TEST_COMMAND ""
+)
+
+ExternalProject_Add(libarchive_ep
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/deps/libarchive
+    DEPENDS liblzma_ep
+    CMAKE_ARGS
+        -DCMAKE_INSTALL_PREFIX=${STAGING_DIR}
+        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+        -DCMAKE_PREFIX_PATH=${STAGING_DIR}
+        -DBUILD_SHARED_LIBS=OFF
+        -DENABLE_TEST=OFF
+        -DENABLE_CAT=OFF
+        -DENABLE_TAR=OFF
+    TEST_COMMAND ""
+)
+
+add_library(lzma_imported STATIC IMPORTED GLOBAL)
+set_property(TARGET lzma_imported PROPERTY
+    IMPORTED_LOCATION ${STAGING_DIR}/lib/lzma.lib
+)
+add_dependencies(lzma_imported liblzma_ep)
+
+add_library(archive_imported STATIC IMPORTED GLOBAL)
+set_property(TARGET archive_imported PROPERTY
+    IMPORTED_LOCATION ${STAGING_DIR}/lib/archive.lib
+)
+set_property(TARGET archive_imported APPEND PROPERTY
+    INTERFACE_LINK_LIBRARIES lzma_imported
+)
+add_dependencies(archive_imported libarchive_ep)
+
+# Initialize OpenCC
 set(ENABLE_TESTING OFF CACHE BOOL "" FORCE)
 set(ENABLE_DOCUMENTATION OFF CACHE BOOL "" FORCE)
 set(USE_SYSTEM_MARISA OFF CACHE BOOL "" FORCE)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 add_subdirectory(deps/OpenCC)
 
 # Generate OpenCC dictionaries
@@ -43,33 +83,31 @@ find_program(SEVENZIP_EXECUTABLE
 message(STATUS "Found 7-Zip: ${SEVENZIP_EXECUTABLE}")
 
 set(SCRIPTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/scripts)
-set(OPENCC_DICTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/opencc_dicts)
+set(TEMP_DICTS_DIR ${CMAKE_BINARY_DIR}/opencc_dicts_temp)
 set(COMPILED_DICTS_DIR ${CMAKE_BINARY_DIR}/deps/OpenCC/data)
 set(CONFIG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/deps/OpenCC/data/config)
-set(SEVENZIP_FILE ${OPENCC_DICTS_DIR}/opencc.7z)
-set(HEADER_FILE ${OPENCC_DICTS_DIR}/opencc_archive.h)
+set(SEVENZIP_FILE ${CMAKE_BINARY_DIR}/opencc.7z)
+set(HEADER_FILE ${CMAKE_BINARY_DIR}/generated/opencc_archive.h)
 
 add_custom_target(
     GenerateOpenCCData
+    DEPENDS libopencc Dictionaries
     COMMAND ${Python_EXECUTABLE} ${SCRIPTS_DIR}/copy_dicts.py
             --compiled-dir ${COMPILED_DICTS_DIR}
             --config-dir ${CONFIG_DIR}
-            --dest-dir ${OPENCC_DICTS_DIR}
-    COMMAND ${SEVENZIP_EXECUTABLE} a -t7z -m0=lzma2 -y ${SEVENZIP_FILE} ${OPENCC_DICTS_DIR}/*.json ${OPENCC_DICTS_DIR}/*.ocd2
+            --dest-dir ${TEMP_DICTS_DIR}
+    COMMAND ${SEVENZIP_EXECUTABLE} a -t7z -m0=lzma2 -y ${SEVENZIP_FILE} ${TEMP_DICTS_DIR}/*.json ${TEMP_DICTS_DIR}/*.ocd2
     COMMAND ${Python_EXECUTABLE} ${SCRIPTS_DIR}/file_to_c_array.py
             --input ${SEVENZIP_FILE}
             --output ${HEADER_FILE}
             --array-name opencc_data
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     COMMENT "Generating OpenCC data header from dictionaries..."
-    DEPENDS libopencc
     BYPRODUCTS ${HEADER_FILE} ${SEVENZIP_FILE}
 )
 
 
 # Project Configuration
-
-include_directories(${OPENCC_DICTS_DIR})
 
 file(GLOB_RECURSE PLUGIN_SOURCES
     "src/*.cpp"
@@ -87,12 +125,11 @@ target_compile_definitions(NppChineseConverter PRIVATE
     Opencc_BUILT_AS_STATIC
 )
 
-add_dependencies(NppChineseConverter GenerateOpenCCData)
+add_dependencies(NppChineseConverter archive_imported GenerateOpenCCData)
 
 target_link_libraries(NppChineseConverter PRIVATE
     libopencc
-    archive_static
-    liblzma
+    archive_imported
     shlwapi     # Nppsys
     bcrypt      # libarchive
 )
@@ -100,8 +137,6 @@ target_link_libraries(NppChineseConverter PRIVATE
 target_include_directories(NppChineseConverter PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/src"
     "${CMAKE_CURRENT_SOURCE_DIR}/nppsys"
-    "${CMAKE_CURRENT_SOURCE_DIR}/opencc_dicts"
-    "${CMAKE_CURRENT_SOURCE_DIR}/deps/OpenCC/src"
-    "${CMAKE_CURRENT_SOURCE_DIR}/deps/libarchive/libarchive"
-    "${CMAKE_CURRENT_SOURCE_DIR}/deps/liblzma/src/liblzma/api"
+    "${CMAKE_BINARY_DIR}/generated"
+    "${STAGING_DIR}/include"
 )
