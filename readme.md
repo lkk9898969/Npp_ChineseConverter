@@ -23,9 +23,13 @@
 
 ## 🔨 編譯方式
 
+### 依賴項目(已包含在本專案中)
+- [OpenCC](https://github.com/BYVoid/OpenCC)
+- [libarchive](https://github.com/libarchive/libarchive)
+- [liblzma](https://github.com/ShiftMediaProject/liblzma) (這邊使用[Shift Media Project](https://github.com/ShiftMediaProject)修改後的`liblzma`以便於用`CMake`配置與編譯)
+
 ### 環境需求
-- [Visual Studio 2022](https://visualstudio.microsoft.com/)  
-- C++ 桌面開發套件  
+- [Visual Studio 2022](https://visualstudio.microsoft.com/) 以及其 C++ 桌面開發套件
 - `Windows 11 SDK (10.0.22621.0)` (作者使用的版本)  
 - [git](https://git-scm.com/downloads/win) 與 [cmake](https://cmake.org/)，且於你的`PATH`環境變數中
 - [Python](https://www.python.org/)（用於腳本處理）
@@ -45,11 +49,10 @@ cmake --build build --config Release --target NppChineseConverter
 ```
 
 ## 🔄 更新子模組或字典
-
 若需更新任何子模組或 OpenCC 字典：
-1. 進入對應的子模組資料夾（例如 `deps/OpenCC`）。
-2. 使用 `git pull origin master` 或 `git checkout <tag>` 切換到想要的版本。
-3. 回到專案根目錄。
-4. 重新執行**編譯步驟 `2` 和 `3`**(建議刪除 `build` 資料夾)。
-
-（理論上這樣就可以完成更新 😅）
+  1. 進入對應的子模組資料夾。
+  2. 使用 `git pull origin master` 或 `git checkout <tag>` 切換到想要的版本。
+  3. 回到專案根目錄。
+  4. 重新執行**編譯步驟 `1` 和 `2`**(建議刪除 `build` 資料夾)。  
+  
+  （理論上這樣就可以完成更新 😅）
