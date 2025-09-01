@@ -1,32 +1,40 @@
+import argparse
 from pathlib import Path
-
 
 def file_to_c_array(filepath, array_name):
     with open(filepath, "rb") as f:
         content = f.read()
 
     hex_bytes = [f"0x{b:02x}" for b in content]
-
-    # 每行 16 個位元組
-    lines = []
-    for i in range(0, len(hex_bytes), 16):
-        lines.append(", ".join(hex_bytes[i : i + 16]))
+    lines = [", ".join(hex_bytes[i : i + 16]) for i in range(0, len(hex_bytes), 16)]
 
     c_array_str = (
-        "#pragma once\n"
-        + f"const unsigned char {array_name}[] = {{\n  "
+        "#pragma once\n\n"
+        f"const unsigned char {array_name}[] = {{\n  "
         + ",\n  ".join(lines)
-        + f"\n}};\nconst unsigned int {array_name}_len = {len(content)};\n"
+        + f"\n}};\n\nconst unsigned int {array_name}_len = {len(content)};\n"
     )
     return c_array_str
 
+def main():
+    parser = argparse.ArgumentParser(description="Convert a binary file to a C header array.")
+    parser.add_argument("--input", type=Path, required=True, help="Input binary file path (e.g., opencc.7z).")
+    parser.add_argument("--output", type=Path, required=True, help="Output C header file path.")
+    parser.add_argument("--array-name", type=str, default="opencc_data", help="Name of the C array variable.")
+    args = parser.parse_args()
+
+    if not args.input.exists():
+        print(f"Error: Input file not found at {args.input}")
+        exit(1)
+
+    args.output.parent.mkdir(exist_ok=True, parents=True)
+
+    c_code = file_to_c_array(args.input, args.array_name)
+    
+    with open(args.output, "w", encoding="utf-8") as f:
+        f.write(c_code)
+    
+    print(f"Successfully generated header file at {args.output}")
 
 if __name__ == "__main__":
-    root = Path(__file__).parent.parent
-    _7z = root / "dict" / "opencc.7z"
-    if not _7z.exists():
-        print(f"File not found: {_7z}")
-        exit(1)
-    output = file_to_c_array(_7z, "opencc_data")
-    with open(root / "dict" / "opencc_data.h", "w") as f:
-        f.write(output)
+    main()

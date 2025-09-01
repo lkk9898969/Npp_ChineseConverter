@@ -24,7 +24,7 @@
 #include "archive_entry.h"
 #include "BasicInclude.hpp"
 #include "opencc.h"
-#include "opencc_data.h"
+#include "opencc_archive.h"
 
 //
 // The plugin data that Notepad++ needs

@@ -1,11 +1,11 @@
 [submodule "OpenCC"]
-	path = OpenCC
+	path = deps/OpenCC
 	url = https://github.com/BYVoid/OpenCC.git
 [submodule "libarchive"]
-	path = libarchive
+	path = deps/libarchive
 	url = https://github.com/libarchive/libarchive.git
 	branch = v3.8.1
 [submodule "liblzma"]
-	path = liblzma
+	path = deps/liblzma
 	url = https://github.com/ShiftMediaProject/liblzma.git
 	branch = v5.8.1

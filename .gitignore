@@ -6,18 +6,16 @@
 # User-specific files
 .github/
 
-/dict
+vs.proj/
+*.sln
+*.bat
+/build
+/*dicts
 *.sdf
 *.suo
 bin/
 bin64/
 arm64/
-vs.proj/Debug
-vs.proj/Release
-vs.proj/x64
-vs.proj/ARM64
-vs.proj/NppPlugi.*
-vs.proj/.vs/
 *.aps
 *.zip
 *.bak
