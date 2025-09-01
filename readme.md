@@ -12,6 +12,17 @@
 > 作者是超級新手，專案結構非常陽春，手動編譯不保證一定能夠成功。  
 > 歡迎老手提意見。
 
+## 📦 安裝方式
+
+於 Release 頁面下載預先編譯好的 DLL 檔案，或是自行依下方「編譯方式」進行編譯。接著依 [Notepad++ 官網的 Install plugin manually](https://npp-user-manual.org/docs/plugins/#install-plugin-manually) 步驟進行安裝。
+
+1. 建立/進入 `Notepad++\plugins\NppChineseConverter` 資料夾（名稱需與 DLL 主檔名一致）。
+2. 將 `NppChineseConverter.dll` 放入該資料夾中。
+3. 重新啟動 Notepad++ 即可於「外掛模組」功能表看到 `Chinese Converter`。
+
+> ⚠️ **注意**  
+> 可能會需要[Visual Studio Runtime](https://learn.microsoft.com/zh-tw/cpp/windows/latest-supported-vc-redist?view=msvc-170#visual-studio-2015-2017-2019-and-2022)*(aka Microsoft Visual C++ 可轉散發套件)*
+
 
 ## 🚀 使用方式
 
@@ -20,10 +31,9 @@
 2. 開啟 `外掛模組 -> Chinese Converter`  
 3. 選擇你要的動作（如：簡轉繁、繁轉簡）即可完成。  
 
-
 ## 🔨 編譯方式
 
-### 依賴項目(已包含在本專案中)
+### 依賴項目(子模組，已在專案中)
 - [OpenCC](https://github.com/BYVoid/OpenCC)
 - [libarchive](https://github.com/libarchive/libarchive)
 - [liblzma](https://github.com/ShiftMediaProject/liblzma) (這邊使用[Shift Media Project](https://github.com/ShiftMediaProject)修改後的`liblzma`以便於用`CMake`配置與編譯)
@@ -35,7 +45,7 @@
 - [Python](https://www.python.org/)（用於腳本處理）
 - [7-Zip](https://www.7-zip.org/) (用於打包OpenCC字典)
 
-**備註**：請確保 `git`, `cmake`, `Python` 的執行檔路徑都已加入到您的系統 `PATH` 環境變數中  
+**備註**：請確保 `git`, `cmake`, `Python` 的執行檔路徑都已加入到系統 `PATH` 環境變數中  
 你可以透過`-DSEVENZIP_EXECUTABLE`提供7z程式的路徑
 
 ### 步驟
