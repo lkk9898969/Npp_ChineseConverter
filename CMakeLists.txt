@@ -1,12 +1,10 @@
-# CMake 最低版本要求，建議 3.15 或更高
 cmake_minimum_required(VERSION 3.15)
 
-# 專案名稱與基本設定
 project(NppChineseConverter LANGUAGES CXX C)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# --- 步驟 1: 初始化 Git 子模組 ---
+# Initialize Submodules
 find_package(Git QUIET)
 if(GIT_FOUND AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.git")
     if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/deps/OpenCC/CMakeLists.txt")
@@ -22,7 +20,7 @@ if(GIT_FOUND AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.git")
     endif()
 endif()
 
-# --- 步驟 2: 編譯依賴函式庫 ---
+# Compile dependent libraries
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
 add_subdirectory(deps/liblzma)
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/deps/liblzma")
@@ -35,7 +33,7 @@ set(ENABLE_DOCUMENTATION OFF CACHE BOOL "" FORCE)
 set(USE_SYSTEM_MARISA OFF CACHE BOOL "" FORCE)
 add_subdirectory(deps/OpenCC)
 
-# --- 步驟 3: 自動化字典處理與 .h 檔案生成 ---
+# Generate OpenCC dictionaries
 find_package(Python REQUIRED COMPONENTS Interpreter)
 find_program(SEVENZIP_EXECUTABLE 
     NAMES 7z 7za 
@@ -69,7 +67,7 @@ add_custom_target(
 )
 
 
-# --- 步驟 4: 設定主專案 (NppChineseConverter) ---
+# Project Configuration
 
 include_directories(${OPENCC_DICTS_DIR})
 
@@ -82,28 +80,22 @@ file(GLOB_RECURSE PLUGIN_SOURCES
 
 add_library(NppChineseConverter SHARED ${PLUGIN_SOURCES} ${HEADER_FILE})
 
-# *** MODIFIED LINES START ***
-# 為您的插件目標定義所有必要的巨集
 target_compile_definitions(NppChineseConverter PRIVATE 
-    UNICODE 
+    UNICODE
     _UNICODE
-    LIBARCHIVE_STATIC      # 告訴 libarchive 不要使用 dllimport
-    Opencc_BUILT_AS_STATIC # 告訴 opencc 不要使用 dllimport
+    LIBARCHIVE_STATIC
+    Opencc_BUILT_AS_STATIC
 )
-# *** MODIFIED LINES END ***
 
 add_dependencies(NppChineseConverter GenerateOpenCCData)
 
-# *** MODIFIED LINES START ***
-# 連結所有依賴的函式庫，並加入必要的 Windows 系統函式庫
 target_link_libraries(NppChineseConverter PRIVATE
     libopencc
     archive_static
     liblzma
-    shlwapi     # 提供 PathAppendW, PathFileExistsW 等函式
-    bcrypt      # libarchive 需要的加密函式庫
+    shlwapi     # Nppsys
+    bcrypt      # libarchive
 )
-# *** MODIFIED LINES END ***
 
 target_include_directories(NppChineseConverter PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/src"

@@ -1,7 +1,8 @@
 import argparse
 from pathlib import Path
 
-def file_to_c_array(filepath, array_name):
+
+def file_to_c_array(filepath: Path, array_name: str):
     with open(filepath, "rb") as f:
         content = f.read()
 
@@ -16,11 +17,26 @@ def file_to_c_array(filepath, array_name):
     )
     return c_array_str
 
+
 def main():
-    parser = argparse.ArgumentParser(description="Convert a binary file to a C header array.")
-    parser.add_argument("--input", type=Path, required=True, help="Input binary file path (e.g., opencc.7z).")
-    parser.add_argument("--output", type=Path, required=True, help="Output C header file path.")
-    parser.add_argument("--array-name", type=str, default="opencc_data", help="Name of the C array variable.")
+    parser = argparse.ArgumentParser(
+        description="Convert a binary file to a C header array."
+    )
+    parser.add_argument(
+        "--input",
+        type=Path,
+        required=True,
+        help="Input binary file path (e.g., opencc.7z).",
+    )
+    parser.add_argument(
+        "--output", type=Path, required=True, help="Output C header file path."
+    )
+    parser.add_argument(
+        "--array-name",
+        type=str,
+        default="opencc_data",
+        help="Name of the C array variable.",
+    )
     args = parser.parse_args()
 
     if not args.input.exists():
@@ -30,11 +46,12 @@ def main():
     args.output.parent.mkdir(exist_ok=True, parents=True)
 
     c_code = file_to_c_array(args.input, args.array_name)
-    
+
     with open(args.output, "w", encoding="utf-8") as f:
         f.write(c_code)
-    
+
     print(f"Successfully generated header file at {args.output}")
+
 
 if __name__ == "__main__":
     main()
