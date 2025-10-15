@@ -8,7 +8,10 @@
 作者在網路上找不到有人幫 Notepad++ 製作繁簡轉換插件，因此決定自己動手開發。(經典程式人第一反應)  
 目前功能仍然非常陽春，可能存在許多 BUG，請自行斟酌使用。
 
-> ⚠️ **注意**  
+> [!IMPORTANT]  
+> Notepad++ 版本需 v8.4.3 以上才可正常運作。  
+
+> [!NOTE]  
 > 作者是超級新手，專案結構非常陽春，手動編譯不保證一定能夠成功。  
 > 歡迎老手提意見。
 
@@ -20,8 +23,8 @@
 2. 將 `NppChineseConverter.dll` 放入該資料夾中。
 3. 重新啟動 Notepad++ 即可於「外掛模組」功能表看到 `Chinese Converter`。
 
-> ⚠️ **注意**  
-> 可能會需要[Visual Studio Runtime](https://learn.microsoft.com/zh-tw/cpp/windows/latest-supported-vc-redist?view=msvc-170#visual-studio-2015-2017-2019-and-2022)*(aka Microsoft Visual C++ 可轉散發套件)*
+> [!WARNING]  
+> 可能會需要[Visual Studio 2022 Runtime](https://learn.microsoft.com/zh-tw/cpp/windows/latest-supported-vc-redist?view=msvc-170#visual-studio-2015-2022)*(aka Microsoft Visual C++ 2015-2022 可轉散發套件)*
 
 
 ## 🚀 使用方式
