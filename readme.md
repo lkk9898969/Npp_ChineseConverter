@@ -13,7 +13,7 @@
 
 > [!NOTE]  
 > 作者是超級新手，專案結構非常陽春，手動編譯不保證一定能夠成功。  
-> 歡迎老手提意見。
+> 歡迎前輩們提意見。
 
 ## 📦 安裝方式
 
@@ -56,6 +56,16 @@
 ```bash
 cmake -Bbuild -G"Visual Studio 17 2022" -A x64
 ```
+> [!NOTE]  
+> 可以透過提供  
+> -DUSE_SYSTEM_LIBLZMA=ON  
+> -DUSE_SYSTEM_LIBARCHIVE=ON  
+> 使用已安裝好的依賴函式庫(例如使用vcpkg預先安裝)  
+> 當USE_SYSTEM_LIBARCHIVE為ON時USE_SYSTEM_LIBLZMA選項無效。
+
+> [!WARNING]  
+> 當使用USE_SYSTEM_LIBARCHIVE時請確保系統的libarchive有啟用lzma！  
+> 否則編譯出的dll將無法正常解壓縮字典檔案。
 2. 編譯(Build)
 ```bash
 cmake --build build --config Release --target NppChineseConverter
