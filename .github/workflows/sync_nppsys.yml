@@ -1,0 +1,142 @@
+name: Sync Notepad++ Headers
+
+on:
+  schedule:
+    # 每天 UTC 03:00 (台灣時間 11:00) 檢查
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+# 設定權限，確保能 Push 程式碼
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get latest Notepad++ tag
+        id: npp-version
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # 使用 GitHub CLI 或帶 Token 的 Curl 避免 Rate Limit
+          # 這裡使用帶 Token 的 curl 獲取最新 Release Tag
+          LATEST_TAG=$(curl -s -H "Authorization: token $GH_TOKEN" https://api.github.com/repos/notepad-plus-plus/notepad-plus-plus/tags | jq -r '.[0].name')
+          
+          echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+          echo "Latest Notepad++ tag: $LATEST_TAG"
+          
+          # 檢查本地記錄的版本 (修復了原本的路徑空格錯誤)
+          SYNC_FILE="nppsys/.synced_version"
+          if [ -f "$SYNC_FILE" ]; then
+            CURRENT_TAG=$(cat "$SYNC_FILE")
+            echo "current_tag=$CURRENT_TAG" >> $GITHUB_OUTPUT
+            echo "Current synced tag: $CURRENT_TAG"
+          else
+            echo "current_tag=none" >> $GITHUB_OUTPUT
+            echo "No previous sync found"
+          fi
+
+      - name: Check if update needed
+        id: check-update
+        run: |
+          LATEST="${{ steps.npp-version.outputs.latest_tag }}"
+          CURRENT="${{ steps.npp-version.outputs.current_tag }}"
+          
+          # 確保 LATEST 不為空且不等於 null
+          if [ -z "$LATEST" ] || [ "$LATEST" == "null" ]; then
+            echo "Error: Failed to fetch latest tag."
+            exit 1
+          fi
+
+          if [ "$LATEST" != "$CURRENT" ]; then
+            echo "Status: Update required ($CURRENT -> $LATEST)"
+            echo "needs_update=true" >> $GITHUB_OUTPUT
+          else
+            echo "Status: Up to date ($LATEST)"
+            echo "needs_update=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Download Notepad++ source files
+        if: steps.check-update.outputs.needs_update == 'true'
+        run: |
+          TAG="${{ steps.npp-version.outputs.latest_tag }}"
+          BASE_URL="https://raw.githubusercontent.com/notepad-plus-plus/notepad-plus-plus/${TAG}"
+          TARGET_DIR="nppsys"
+          
+          mkdir -p "$TARGET_DIR"
+          
+          # 定義檔案對應 (Key: 本地檔名, Value: 遠端路徑)
+          declare -A FILES=(
+            ["Notepad_plus_msgs.h"]="PowerEditor/src/MISC/PluginsManager/Notepad_plus_msgs.h"
+            ["PluginInterface.h"]="PowerEditor/src/MISC/PluginsManager/PluginInterface.h"
+            ["Sci_Position.h"]="scintilla/include/Sci_Position.h"
+            ["Scintilla.h"]="scintilla/include/Scintilla.h"
+            ["menuCmdID.h"]="PowerEditor/src/menuCmdID.h"
+          )
+          
+          echo "### Downloading files for tag: $TAG ###"
+          
+          has_error=false
+          for filename in "${!FILES[@]}"; do
+            source_path="${FILES[$filename]}"
+            echo "Downloading: $filename"
+            
+            # 使用 curl -f 失敗時返回錯誤碼
+            if curl -s -f "${BASE_URL}/${source_path}" -o "${TARGET_DIR}/${filename}"; then
+              echo "✓ Success: $filename"
+            else
+              echo "✗ Failed: $filename (Source: $source_path)"
+              has_error=true
+            fi
+          done
+          
+          if [ "$has_error" = true ]; then
+            echo "Error: One or more files failed to download."
+            exit 1
+          fi
+          
+          # 記錄同步版本
+          echo "$TAG" > "${TARGET_DIR}/.synced_version"
+          echo "All files downloaded successfully."
+
+      - name: Commit and push changes
+        if: steps.check-update.outputs.needs_update == 'true'
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          git add nppsys/
+          
+          if git diff --staged --quiet; then
+            echo "No file changes detected."
+          else
+            TAG="${{ steps.npp-version.outputs.latest_tag }}"
+            git commit -m "chore: sync Notepad++ headers to $TAG"
+            git push
+            echo "✓ Changes pushed to repository."
+          fi
+
+      - name: Create Summary
+        if: always()
+        run: |
+          echo "## 🔄 Notepad++ Header Sync Summary" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "| :--- | :--- |" >> $GITHUB_STEP_SUMMARY
+          echo "| Latest Tag | **${{ steps.npp-version.outputs.latest_tag }}** |" >> $GITHUB_STEP_SUMMARY
+          echo "| Previous Tag | ${{ steps.npp-version.outputs.current_tag }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Update Performed | ${{ steps.check-update.outputs.needs_update }} |" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.check-update.outputs.needs_update }}" == "true" ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### ✅ Synced Files" >> $GITHUB_STEP_SUMMARY
+            echo "- Notepad_plus_msgs.h" >> $GITHUB_STEP_SUMMARY
+            echo "- PluginInterface.h" >> $GITHUB_STEP_SUMMARY
+            echo "- Sci_Position.h" >> $GITHUB_STEP_SUMMARY
+            echo "- Scintilla.h" >> $GITHUB_STEP_SUMMARY
+            echo "- menuCmdID.h" >> $GITHUB_STEP_SUMMARY
+          fi
