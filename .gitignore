@@ -9,7 +9,7 @@
 vs.proj/
 *.sln
 *.bat
-/build
+/build*
 /*dicts
 *.sdf
 *.suo

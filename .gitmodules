@@ -4,7 +4,7 @@
 [submodule "libarchive"]
 	path = deps/libarchive
 	url = https://github.com/libarchive/libarchive.git
-	branch = v3.8.2
+	branch = v3.8.5
 [submodule "liblzma"]
 	path = deps/liblzma
 	url = https://github.com/ShiftMediaProject/liblzma.git
