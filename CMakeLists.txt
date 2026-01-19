@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 
-project(NppChineseConverter LANGUAGES CXX C)
+project(NppChineseConverter VERSION 1.0.1 LANGUAGES CXX C)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -264,16 +264,29 @@ add_custom_target(
 file(GLOB_RECURSE PLUGIN_SOURCES
     "src/*.cpp"
     "src/*.h"
+    "src/*.rc"
     "nppsys/*.c"
     "nppsys/*.h"
 )
 
 add_library(NppChineseConverter SHARED ${PLUGIN_SOURCES} ${HEADER_FILE})
 
+if(NOT PROJECT_VERSION_PATCH)
+    set(PROJECT_VERSION_PATCH 0)
+endif()
+if(NOT PROJECT_VERSION_TWEAK)
+    set(PROJECT_VERSION_TWEAK 0)
+endif()
+
 target_compile_definitions(NppChineseConverter PRIVATE 
     UNICODE
     _UNICODE
     Opencc_BUILT_AS_STATIC
+    NPP_PLUGIN_VERSION_MAJOR=${PROJECT_VERSION_MAJOR}
+    NPP_PLUGIN_VERSION_MINOR=${PROJECT_VERSION_MINOR}
+    NPP_PLUGIN_VERSION_PATCH=${PROJECT_VERSION_PATCH}
+    NPP_PLUGIN_VERSION_TWEAK=${PROJECT_VERSION_TWEAK}
+    NPP_PLUGIN_VERSION_STRING="${PROJECT_VERSION}"
 )
 
 add_dependencies(NppChineseConverter archive_imported GenerateOpenCCData)

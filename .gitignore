@@ -5,6 +5,7 @@
 
 # User-specific files
 
+.vscode/
 vs.proj/
 *.sln
 *.bat
