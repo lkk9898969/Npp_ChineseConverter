@@ -79,3 +79,16 @@ cmake --build build --config Release --target NppChineseConverter
   4. 重新執行**編譯步驟 `1` 和 `2`**(建議刪除 `build` 資料夾)。  
   
   （理論上這樣就可以完成更新 😅）
+ 
+## License
+
+This project is licensed under the GNU General Public License v3.0
+
+See the LICENSE.txt and NOTICE.txt for details.
+
+### License Notice
+
+The author does not claim expertise in software licensing.
+This project’s licensing information was prepared with the assistance of AI tools.
+
+If you spot any errors in the copyright notices or license usage, your feedback is highly appreciated.

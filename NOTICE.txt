@@ -1,0 +1,34 @@
+Licenses and Copyrights
+===================================
+
+This software is released under the GNU General Public License v3 (see LICENSE).
+
+It incorporates code and headers from the following projects:
+
+1. Notepad++
+   Copyright (C) Don Ho.
+   Licensed under GPLv3 or later.
+
+2. Scintilla
+   Copyright (C) Neil Hodgson and contributors.
+   Licensed under the Scintilla License (MIT-style).
+   Full license text: licenses/LICENSE.scintilla
+   
+3. OpenCC
+   Licensed under the Apache License, Version 2.0.
+   Full license text: licenses/LICENSE.opencc
+
+4. Libarchive
+   Copyright by Tim Kientzle.
+   Licensed under BSD-style license.
+   Full license text: licenses/LICENSE.libarchive
+
+5. XZ Utils (liblzma)
+   Public Domain / 0BSD License.
+   Full license text: licenses/LICENSE.xz
+
+Clarifications:
+---------------
+- Only liblzma (0BSD) is used from XZ Utils.
+- No GPL/LGPL-licensed command-line tools or scripts from XZ Utils
+  are included in the binary.
