@@ -24,7 +24,7 @@
 3. 重新啟動 Notepad++ 即可於「外掛模組」功能表看到 `Chinese Converter`。
 
 > [!WARNING]  
-> 可能會需要[Visual Studio 2022 Runtime](https://learn.microsoft.com/zh-tw/cpp/windows/latest-supported-vc-redist?view=msvc-170#visual-studio-2015-2022)*(aka Microsoft Visual C++ 2015-2022 可轉散發套件)*
+> 可能會需要[Visual Studio Runtime v14](https://learn.microsoft.com/zh-tw/cpp/windows/latest-supported-vc-redist?view=msvc-170#visual-c-redistributable-v14)*(aka Microsoft Visual C++ 2015-2022 可轉散發套件)*
 
 
 ## 🚀 使用方式
@@ -36,14 +36,14 @@
 
 ## 🔨 編譯方式
 
-### 依賴項目(子模組，已在專案中)
+### 依賴項目(子模組)
 - [OpenCC](https://github.com/BYVoid/OpenCC)
 - [libarchive](https://github.com/libarchive/libarchive)
 - [liblzma](https://github.com/ShiftMediaProject/liblzma) (這邊使用[Shift Media Project](https://github.com/ShiftMediaProject)修改後的`liblzma`以便於用`CMake`配置與編譯)
 
 ### 環境需求
-- [Visual Studio 2022](https://visualstudio.microsoft.com/) 以及其 C++ 桌面開發套件
-- `Windows 11 SDK (10.0.22621.0)` (作者使用的版本)  
+- [Visual Studio 2026](https://visualstudio.microsoft.com/) 以及其 C++ 桌面開發套件
+- `Windows 11 SDK (10.0.26100.0)` (作者使用的版本)  
 - [git](https://git-scm.com/downloads/win) 與 [cmake](https://cmake.org/)，且於你的`PATH`環境變數中
 - [Python](https://www.python.org/)（用於腳本處理）
 - [7-Zip](https://www.7-zip.org/) (用於打包OpenCC字典)
@@ -52,24 +52,30 @@
 你可以透過`-DSEVENZIP_EXECUTABLE`提供7z程式的路徑
 
 ### 步驟
-1. 配置(Configure)  
-```bash
-cmake -Bbuild -G"Visual Studio 17 2022" -A x64
-```
-> [!NOTE]  
-> 可以透過提供  
-> -DUSE_SYSTEM_LIBLZMA=ON  
-> -DUSE_SYSTEM_LIBARCHIVE=ON  
-> 使用已安裝好的依賴函式庫(例如使用vcpkg預先安裝)  
-> 當USE_SYSTEM_LIBARCHIVE為ON時USE_SYSTEM_LIBLZMA選項無效。
+1. 配置(Configure)
+   
+     ```bash
+     cmake -Bbuild -G"Visual Studio 18 2026" -A x64
+     ```
+     如果是32位元架構(x86):
+     ```bash
+     cmake -Bbuild -G"Visual Studio 18 2026" -A Win32
+     ```
+  > [!NOTE]  
+  > 可以透過提供  
+  > -DUSE_SYSTEM_LIBLZMA=ON  
+  > -DUSE_SYSTEM_LIBARCHIVE=ON  
+  > 使用已安裝好的依賴函式庫(例如使用vcpkg預先安裝)  
+  > 當USE_SYSTEM_LIBARCHIVE為ON時USE_SYSTEM_LIBLZMA選項無效。
 
-> [!WARNING]  
-> 當使用USE_SYSTEM_LIBARCHIVE時請確保系統的libarchive有啟用lzma！  
-> 否則編譯出的dll將無法正常解壓縮字典檔案。
+  > [!WARNING]  
+  > 當使用USE_SYSTEM_LIBARCHIVE時請確保系統的libarchive有啟用lzma！  
+  > 否則編譯出的dll將無法正常解壓縮字典檔案。
 2. 編譯(Build)
-```bash
-cmake --build build --config Release --target NppChineseConverter
-```
+
+     ```bash
+     cmake --build build --config Release --target NppChineseConverter
+     ```
 
 ## 🔄 更新子模組或字典
 若需更新任何子模組或 OpenCC 字典：
