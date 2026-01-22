@@ -3,7 +3,7 @@
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
-//(at your option) any later version.
+// (at your option) any later version.
 //
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -12,14 +12,8 @@
 
 #pragma once
 
-#include <string>
+namespace NppChineseConverter {
 
-#include "Common.hpp"
-#include "Notepad_plus_msgs.h"
-#include "PluginDefinition.h"
-#include "Scintilla.h"
-#include "menuCmdID.h"
+bool DecompressConfigs(const wchar_t *destDir);
 
-
-extern FuncItem funcItem[nbFunc];
-extern NppData nppData;
+} // namespace NppChineseConverter
