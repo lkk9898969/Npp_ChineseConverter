@@ -15,20 +15,10 @@ It incorporates code and headers from the following projects:
    Full license text: licenses/LICENSE.scintilla
    
 3. OpenCC
+   Copyright 2010-2020 Carbo Kuo <byvoid@byvoid.com>
    Licensed under the Apache License, Version 2.0.
    Full license text: licenses/LICENSE.opencc
 
-4. Libarchive
-   Copyright by Tim Kientzle.
-   Licensed under BSD-style license.
-   Full license text: licenses/LICENSE.libarchive
-
-5. XZ Utils (liblzma)
-   Public Domain / 0BSD License.
-   Full license text: licenses/LICENSE.xz
-
-Clarifications:
----------------
-- Only liblzma (0BSD) is used from XZ Utils.
-- No GPL/LGPL-licensed command-line tools or scripts from XZ Utils
-  are included in the binary.
+4. LZMA SDK
+   The LZMA SDK is placed in the public domain by Igor Pavlov.
+   Source: https://www.7-zip.org/sdk.html

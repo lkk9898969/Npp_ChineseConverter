@@ -24,7 +24,7 @@
 3. 重新啟動 Notepad++ 即可於「外掛模組」功能表看到 `Chinese Converter`。
 
 > [!WARNING]  
-> 可能會需要[Visual Studio Runtime v14](https://learn.microsoft.com/zh-tw/cpp/windows/latest-supported-vc-redist?view=msvc-170#visual-c-redistributable-v14)*(aka Microsoft Visual C++ 2015-2022 可轉散發套件)*
+> 可能會需要[Visual Studio Runtime v14](https://learn.microsoft.com/zh-tw/cpp/windows/latest-supported-vc-redist?view=msvc-170#visual-c-redistributable-v14)*(aka Microsoft Visual C++ 可轉散發套件)*
 
 
 ## 🚀 使用方式
@@ -38,8 +38,8 @@
 
 ### 依賴項目(子模組)
 - [OpenCC](https://github.com/BYVoid/OpenCC)
-- [libarchive](https://github.com/libarchive/libarchive)
-- [liblzma](https://github.com/ShiftMediaProject/liblzma) (這邊使用[Shift Media Project](https://github.com/ShiftMediaProject)修改後的`liblzma`以便於用`CMake`配置與編譯)
+- [LZMA SDK](https://www.7-zip.org/sdk.html) (用於解壓縮字典)
+
 
 ### 環境需求
 - [Visual Studio 2026](https://visualstudio.microsoft.com/) 以及其 C++ 桌面開發套件
@@ -61,16 +61,7 @@
      ```bash
      cmake -Bbuild -G"Visual Studio 18 2026" -A Win32
      ```
-  > [!NOTE]  
-  > 可以透過提供  
-  > -DUSE_SYSTEM_LIBLZMA=ON  
-  > -DUSE_SYSTEM_LIBARCHIVE=ON  
-  > 使用已安裝好的依賴函式庫(例如使用vcpkg預先安裝)  
-  > 當USE_SYSTEM_LIBARCHIVE為ON時USE_SYSTEM_LIBLZMA選項無效。
 
-  > [!WARNING]  
-  > 當使用USE_SYSTEM_LIBARCHIVE時請確保系統的libarchive有啟用lzma！  
-  > 否則編譯出的dll將無法正常解壓縮字典檔案。
 2. 編譯(Build)
 
      ```bash
