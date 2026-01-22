@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 
-project(NppChineseConverter VERSION 1.0.1 LANGUAGES CXX C)
+project(NppChineseConverter VERSION 1.0.2 LANGUAGES CXX C)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -63,13 +63,14 @@ add_custom_target(
 )
 
 
-# LZMA SDK Object Library
+# LZMA SDK Library
 file(GLOB LZMA_SDK_SOURCES
     "deps/lzma_sdk/src/*.c"
 )
-add_library(LzmaSdkObjs OBJECT ${LZMA_SDK_SOURCES})
-target_include_directories(LzmaSdkObjs PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/deps/lzma_sdk/inc")
-set_target_properties(LzmaSdkObjs PROPERTIES FOLDER "deps")
+set(LZMA_SDK_INC "${CMAKE_CURRENT_SOURCE_DIR}/deps/lzma_sdk/inc")
+add_library(LzmaSDK OBJECT ${LZMA_SDK_SOURCES})
+target_include_directories(LzmaSDK PRIVATE ${LZMA_SDK_INC})
+set_target_properties(LzmaSDK PROPERTIES FOLDER "deps")
 
 
 # Project Configuration
@@ -79,7 +80,7 @@ file(GLOB_RECURSE PLUGIN_SOURCES
     "nppsys/*.c"
 )
 
-add_library(NppChineseConverter SHARED ${PLUGIN_SOURCES} ${HEADER_FILE} $<TARGET_OBJECTS:LzmaSdkObjs>)
+add_library(NppChineseConverter SHARED ${PLUGIN_SOURCES} ${HEADER_FILE} $<TARGET_OBJECTS:LzmaSDK>)
 
 if(NOT PROJECT_VERSION_PATCH)
     set(PROJECT_VERSION_PATCH 0)
@@ -99,18 +100,14 @@ target_compile_definitions(NppChineseConverter PRIVATE
     NPP_PLUGIN_VERSION_STRING="${PROJECT_VERSION}"
 )
 
-# add_dependencies(NppChineseConverter archive_imported GenerateOpenCCData)
-
 target_link_libraries(NppChineseConverter PRIVATE
     libopencc
-    # archive_imported
     shlwapi     # Nppsys
 )
 
 target_include_directories(NppChineseConverter PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/src"
     "${CMAKE_CURRENT_SOURCE_DIR}/nppsys"
-    "${CMAKE_CURRENT_SOURCE_DIR}/deps/lzma_sdk/inc"
+    ${LZMA_SDK_INC}
     "${CMAKE_BINARY_DIR}/generated"
-    "${STAGING_DIR}/include"
 )

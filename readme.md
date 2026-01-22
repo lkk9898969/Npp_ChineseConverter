@@ -1,4 +1,4 @@
-# Npp Chinese Converter - Notepad++ 中文轉換器
+# Npp Chinese Converter - Notepad++ 繁簡轉換插件
 
 使用 [OpenCC](https://github.com/BYVoid/OpenCC) 於 Notepad++ 裡進行繁簡轉換的插件。
 
