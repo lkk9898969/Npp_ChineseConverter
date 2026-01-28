@@ -19,6 +19,9 @@
 
 於 Release 頁面下載預先編譯好的 DLL 檔案，或是自行依下方「編譯方式」進行編譯。接著依 [Notepad++ 官網的 Install plugin manually](https://npp-user-manual.org/docs/plugins/#install-plugin-manually) 步驟進行安裝。
 
+> [!WARNING]  
+> ARM64架構未經過任何測試，若使用上有遭遇問題歡迎回報。
+
 1. 建立/進入 `Notepad++\plugins\NppChineseConverter` 資料夾（名稱需與 DLL 主檔名一致）。
 2. 將 `NppChineseConverter.dll` 放入該資料夾中。
 3. 重新啟動 Notepad++ 即可於「外掛模組」功能表看到 `Chinese Converter`。
@@ -61,12 +64,21 @@
      ```bash
      cmake -Bbuild -G"Visual Studio 18 2026" -A Win32
      ```
+     如果是ARM架構(ARM64):
+     ```bash
+     cmake -Bbuild -G"Visual Studio 18 2026" -A ARM64
+     ```
 
 2. 編譯(Build)
 
      ```bash
      cmake --build build --config Release --target NppChineseConverter
      ```
+
+> [!WARNING]  
+> ARM64架構目前是由amd64交叉編譯實現，由於OpenCC在編譯過程需要運行編譯出的執行檔，  
+> 而在進行Cross Compile時會因為編譯出的執行檔是ARM架構無法執行導致編譯失敗，
+> 因此目前作者先用暫時的patch workaround解決。
 
 ## 🔄 更新子模組或字典
 若需更新任何子模組或 OpenCC 字典：
