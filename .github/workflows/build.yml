@@ -1,0 +1,90 @@
+name: Build and Release
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  build:
+    name: Build (${{ matrix.build_configuration }} ${{ matrix.platform }})
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [x64, x86, ARM64]
+        build_configuration: [Debug, Release]
+        include:
+          - platform: x64
+            cmake_arch: x64
+          - platform: x86
+            cmake_arch: Win32
+          - platform: ARM64
+            cmake_arch: ARM64
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v6
+      with:
+        submodules: recursive
+
+    - name: OpenCC ARM64 Cross-Compile Hack
+      if: matrix.platform == 'ARM64'
+      run: |
+        git apply deps/OpenCC_temporary.patch
+        cmake -S deps/OpenCC -B build-native-tools -G "Visual Studio 17 2022" -A x64 -T ClangCL
+        cmake --build build-native-tools --config Release --target Dictionaries
+
+    - name: Configure CMake
+      shell: pwsh
+      run: |
+        $cmakeArgs = @("-B", "build", "-G", "Visual Studio 17 2022", "-A", "${{ matrix.cmake_arch }}", "-DCMAKE_BUILD_TYPE=${{ matrix.build_configuration }}", "-T", "ClangCL")
+        
+        if ("${{ matrix.platform }}" -eq "ARM64") {
+          $nativeTool = Join-Path (Get-Location) "build-native-tools\src\tools\Release\opencc_dict.exe"
+          Write-Host "Using native opencc_dict at: $nativeTool"
+          $cmakeArgs += "-DOPENCC_DICT_BIN=$nativeTool"
+        }
+        
+        cmake @cmakeArgs
+
+    - name: Build
+      run: cmake --build build --config ${{ matrix.build_configuration }}
+
+    - name: Package
+      run: cmake --build build --config ${{ matrix.build_configuration }} --target PACKAGE
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v6
+      with:
+        name: NppChineseConverter-${{ matrix.build_configuration }}-${{ matrix.platform }}
+        path: build/Packages/NppChineseConverter-${{ matrix.build_configuration }}-${{ matrix.platform }}.zip
+        if-no-files-found: error
+
+  release:
+    name: Create Release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: windows-latest
+    permissions:
+      contents: write
+      
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v7
+        with:
+          path: artifacts
+          pattern: NppChineseConverter-Release-*
+          merge-multiple: true
+
+      - name: Rename for Release
+        run: |
+          cd artifacts
+          # Rename NppChineseConverter-Release-{arch}.zip to NppChineseConverter-{arch}.zip
+          Get-ChildItem "NppChineseConverter-Release-*.zip" | ForEach-Object {
+            $newName = $_.Name -replace "-Release-", "-"
+            Rename-Item -Path $_.FullName -NewName $newName
+          }
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/NppChineseConverter-*.zip
+          generate_release_notes: true
