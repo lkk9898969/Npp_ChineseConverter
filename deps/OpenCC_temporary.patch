@@ -1,0 +1,41 @@
+diff --git a/deps/OpenCC/data/CMakeLists.txt b/deps/OpenCC/data/CMakeLists.txt
+index 3b7057a..6eb2d78 100644
+--- a/deps/OpenCC/data/CMakeLists.txt
++++ b/deps/OpenCC/data/CMakeLists.txt
+@@ -1,6 +1,9 @@
+ find_package(PythonInterp REQUIRED)
+ 
+-set(OPENCC_DICT_BIN opencc_dict)
++if(NOT DEFINED OPENCC_DICT_BIN)
++  set(OPENCC_DICT_BIN opencc_dict)
++endif()
++
+ set(DICT_REVERSE_BIN "${PYTHON_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/scripts/reverse.py")
+ set(DICT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dictionary)
+ set(DICT_GENERATED_DIR ${CMAKE_CURRENT_BINARY_DIR})
+@@ -95,14 +98,17 @@ foreach(DICT ${DICTS_GENERATED})
+   )
+ endforeach(DICT)
+ 
+-add_custom_target(
+-  copy_libopencc_to_dir_of_opencc_dict
+-  COMMENT
+-    "Copying libopencc to directory of opencc_dict"
+-  COMMAND
+-    ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:libopencc>" "$<TARGET_FILE_DIR:${OPENCC_DICT_BIN}>"
+-)
+-if (WIN32)
++if (TARGET ${OPENCC_DICT_BIN})
++  add_custom_target(
++    copy_libopencc_to_dir_of_opencc_dict
++    COMMENT
++      "Copying libopencc to directory of opencc_dict"
++    COMMAND
++      ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:libopencc>" "$<TARGET_FILE_DIR:${OPENCC_DICT_BIN}>"
++  )
++endif()
++
++if (WIN32 AND TARGET ${OPENCC_DICT_BIN})
+   set(DICT_WIN32_DEPENDS copy_libopencc_to_dir_of_opencc_dict)
+ else()
+   set(DICT_WIN32_DEPENDS)
