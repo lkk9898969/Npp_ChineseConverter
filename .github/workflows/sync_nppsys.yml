@@ -2,8 +2,7 @@ name: Sync Notepad++ Headers
 
 on:
   schedule:
-    # 每天 UTC 03:00 (台灣時間 11:00) 檢查
-    - cron: '0 3 * * *'
+    - cron: '0 0 * * 0'  # 每週日 UTC 時間 00:00 執行
   workflow_dispatch:
 
 # 設定權限，確保能 Push 程式碼
