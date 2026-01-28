@@ -19,6 +19,7 @@ arm64/
 *.aps
 *.zip
 *.bak
+/*.json
 
 *.rsuser
 *.suo
@@ -442,4 +443,3 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
-/src/opencc_data.h

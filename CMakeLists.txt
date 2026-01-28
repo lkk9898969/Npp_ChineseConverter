@@ -27,7 +27,8 @@ set(ENABLE_TESTING OFF CACHE BOOL "" FORCE)
 set(ENABLE_DOCUMENTATION OFF CACHE BOOL "" FORCE)
 set(USE_SYSTEM_MARISA OFF CACHE BOOL "" FORCE)
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-add_subdirectory(deps/OpenCC)
+
+add_subdirectory(deps/OpenCC EXCLUDE_FROM_ALL)
 
 # Generate OpenCC dictionaries
 find_package(Python REQUIRED COMPONENTS Interpreter)
@@ -111,3 +112,44 @@ target_include_directories(NppChineseConverter PRIVATE
     ${LZMA_SDK_INC}
     "${CMAKE_BINARY_DIR}/generated"
 )
+
+# -----------------------------------------------------------------------------
+# Installation & Packaging (CPack)
+# -----------------------------------------------------------------------------
+
+# 1. Install target
+install(TARGETS NppChineseConverter
+    RUNTIME DESTINATION .
+    LIBRARY DESTINATION .
+    COMPONENT Application
+)
+
+# 2. Configure CPack
+# Detect architecture for naming (e.g., x64, x86, or arm64)
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(ARM64|arm64|aarch64)" OR CMAKE_VS_PLATFORM_NAME MATCHES "^(ARM64|arm64)")
+    set(CPU_ARCH "arm64")
+elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    set(CPU_ARCH "x64")
+else()
+    set(CPU_ARCH "x86")
+endif()
+
+set(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
+set(CPACK_PACKAGE_VENDOR "NppChineseConverter")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Chinese Converter Plugin for Notepad++")
+set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
+
+set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${CMAKE_BUILD_TYPE}-${CPU_ARCH}")
+set(CPACK_GENERATOR "ZIP")
+set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY OFF)
+
+# Set default package output directory to build/Release
+if(NOT DEFINED CPACK_PACKAGE_DIRECTORY)
+    set(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/Packages")
+endif()
+
+set(CPACK_COMPONENTS_ALL Application)
+
+include(CPack)
