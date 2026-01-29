@@ -2,10 +2,9 @@ name: Sync Notepad++ Headers
 
 on:
   schedule:
-    - cron: '0 0 * * 0'  # 每週日 UTC 時間 00:00 執行
+    - cron: '0 3 * * 6'  # 每週六 UTC 時間 03:00 執行
   workflow_dispatch:
 
-# 設定權限，確保能 Push 程式碼
 permissions:
   contents: write
 
@@ -22,14 +21,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # 使用 GitHub CLI 或帶 Token 的 Curl 避免 Rate Limit
-          # 這裡使用帶 Token 的 curl 獲取最新 Release Tag
           LATEST_TAG=$(curl -s -H "Authorization: token $GH_TOKEN" https://api.github.com/repos/notepad-plus-plus/notepad-plus-plus/tags | jq -r '.[0].name')
           
           echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
           echo "Latest Notepad++ tag: $LATEST_TAG"
           
-          # 檢查本地記錄的版本 (修復了原本的路徑空格錯誤)
           SYNC_FILE="nppsys/.synced_version"
           if [ -f "$SYNC_FILE" ]; then
             CURRENT_TAG=$(cat "$SYNC_FILE")
@@ -46,7 +42,6 @@ jobs:
           LATEST="${{ steps.npp-version.outputs.latest_tag }}"
           CURRENT="${{ steps.npp-version.outputs.current_tag }}"
           
-          # 確保 LATEST 不為空且不等於 null
           if [ -z "$LATEST" ] || [ "$LATEST" == "null" ]; then
             echo "Error: Failed to fetch latest tag."
             exit 1
@@ -69,7 +64,6 @@ jobs:
           
           mkdir -p "$TARGET_DIR"
           
-          # 定義檔案對應 (Key: 本地檔名, Value: 遠端路徑)
           declare -A FILES=(
             ["Notepad_plus_msgs.h"]="PowerEditor/src/MISC/PluginsManager/Notepad_plus_msgs.h"
             ["PluginInterface.h"]="PowerEditor/src/MISC/PluginsManager/PluginInterface.h"
@@ -85,7 +79,6 @@ jobs:
             source_path="${FILES[$filename]}"
             echo "Downloading: $filename"
             
-            # 使用 curl -f 失敗時返回錯誤碼
             if curl -s -f "${BASE_URL}/${source_path}" -o "${TARGET_DIR}/${filename}"; then
               echo "✓ Success: $filename"
             else
@@ -99,7 +92,6 @@ jobs:
             exit 1
           fi
           
-          # 記錄同步版本
           echo "$TAG" > "${TARGET_DIR}/.synced_version"
           echo "All files downloaded successfully."
 
