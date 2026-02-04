@@ -194,14 +194,12 @@ namespace {
 		const auto Converter = converters[translate_mode];
 
 		for (int64_t i = numSelections - 1; i >= 0; --i) {
-#pragma region getAllSelectionsTexts
 			/* get 文字選取範圍，起點與終點一致代表沒選字，跳過 */
 			Sci_Position startPos = SciCall(scintilla_handle, SCI_GETSELECTIONNSTART, i);
 			Sci_Position endPos = SciCall(scintilla_handle, SCI_GETSELECTIONNEND, i);
 			if (startPos == endPos) {
 				continue;
 			}
-
 			/* get 選取的文字 */
 			Sci_Position length = endPos - startPos;
 			std::string selectedText(static_cast<size_t>(length), '\0');
@@ -212,8 +210,6 @@ namespace {
 				selectedText.data(); // C++11 以後保證 string 內部是連續記憶體
 			SciCall(scintilla_handle, SCI_GETTEXTRANGEFULL, 0,
 				reinterpret_cast<sptr_t>(&trf));
-
-#pragma endregion
 			/* 翻譯後替換掉原本的文字 */
 			std::string convertedText = Converter->Convert(selectedText);
 			Sci_CharacterRangeFull& targetRange = trf.chrg;

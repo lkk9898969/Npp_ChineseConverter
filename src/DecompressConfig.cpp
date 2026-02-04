@@ -176,13 +176,9 @@ namespace NppChineseConverter {
 			std::wstring wFileName((wchar_t*)fileName.data());
 
 			// Construct full path
-			// Ensure destDir doesn't end with backslash if wFileName starts with one?
-			// Assuming simple concatenation.
 			std::wstring fullPath = std::wstring(destDir) + L"\\" + wFileName;
 
 			if (isDir) {
-				// CreateDirectory handles existing directories gracefully usually?
-				// Windows CreateDirectory fails if it exists.
 				if (!::PathFileExists(fullPath.c_str())) {
 					::CreateDirectory(fullPath.c_str(), NULL);
 				}
@@ -194,9 +190,6 @@ namespace NppChineseConverter {
 			lstrcpyW(parent, fullPath.c_str());
 			::PathRemoveFileSpec(parent);
 			if (!::PathFileExists(parent)) {
-				// Basic recursive create might be needed if deeply nested and dirs not in
-				// archive But usually archives contain dirs. For safety, assume simple
-				// structure or dirs present.
 				::CreateDirectory(parent, NULL);
 			}
 

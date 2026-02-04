@@ -19,14 +19,14 @@
 
 於 Release 頁面下載預先編譯好的 DLL 檔案，或是自行依下方「編譯方式」進行編譯。接著依 [Notepad++ 官網的 Install plugin manually](https://npp-user-manual.org/docs/plugins/#install-plugin-manually) 步驟進行安裝。
 
-> [!WARNING]  
-> ARM64架構未經過任何測試，若使用上有遭遇問題歡迎回報。
-
 1. 建立/進入 `Notepad++\plugins\NppChineseConverter` 資料夾（名稱需與 DLL 主檔名一致）。
 2. 將 `NppChineseConverter.dll` 放入該資料夾中。
 3. 重新啟動 Notepad++ 即可於「外掛模組」功能表看到 `Chinese Converter`。
 
 > [!WARNING]  
+> ARM64架構未經過任何測試，若使用上有遭遇問題歡迎回報。
+
+> [!NOTE]  
 > 可能會需要[Visual Studio Runtime v14](https://learn.microsoft.com/zh-tw/cpp/windows/latest-supported-vc-redist?view=msvc-170#visual-c-redistributable-v14)*(aka Microsoft Visual C++ 可轉散發套件)*
 
 
