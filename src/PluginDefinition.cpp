@@ -51,7 +51,7 @@ namespace {
 
 	wchar_t plugin_config_dir[MAX_PATH];
 	std::string config_path;
-	std::vector<std::unique_ptr<opencc::SimpleConverter>> converters(HK2TC + 1, nullptr);
+	std::vector<std::unique_ptr<opencc::SimpleConverter>> converters(HK2TC + 1);
 } // namespace
 
 #pragma region Npp Plugin System Interface
