@@ -19,6 +19,7 @@
 #include <shlwapi.h>
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "BasicInclude.hpp"
 #include "DecompressConfig.hpp"
@@ -50,7 +51,7 @@ namespace {
 
 	wchar_t plugin_config_dir[MAX_PATH];
 	std::string config_path;
-	std::vector<opencc::SimpleConverter*> converters(HK2TC, nullptr);
+	std::vector<std::unique_ptr<opencc::SimpleConverter>> converters(HK2TC + 1, nullptr);
 } // namespace
 
 #pragma region Npp Plugin System Interface
@@ -109,12 +110,7 @@ void commandMenuInit() {
 // Here you can do the clean up (especially for the shortcut)
 //
 void commandMenuCleanUp() {
-	for (auto& converter : converters) {
-		if (converter != nullptr) {
-			delete converter;
-			converter = nullptr;
-		}
-	}
+	converters.clear();
 	// Don't forget to deallocate your shortcut here
 }
 
@@ -173,8 +169,9 @@ namespace {
 		try {
 			translateAll(curScintilla, translate_mode);
 		}
-		catch (std::exception e) {
-			::MessageBox(NULL, NppChineseConverter::Utf8ToWideChar(e.what()).data(), TEXT("Error"), MB_OK | MB_ICONERROR);
+		catch (const std::exception& e) {
+			auto error_message = NppChineseConverter::Utf8ToWideChar(e.what());
+			::MessageBox(NULL, error_message.c_str(), TEXT("Error"), MB_OK | MB_ICONERROR);
 		}
 	}
 
@@ -189,9 +186,9 @@ namespace {
 		if (converters[translate_mode] == nullptr) {
 			std::wstring config_name_w = std::wstring(TRANSLATE_MODE_NAME[translate_mode]);
 			std::string config_name = NppChineseConverter::WideCharToUtf8(config_name_w.c_str()) + ".json";
-			converters[translate_mode] = new opencc::SimpleConverter(config_name, std::vector{ std::string(config_path) });
+			converters[translate_mode] = std::make_unique<opencc::SimpleConverter>(config_name, std::vector{ std::string(config_path) });
 		}
-		const auto Converter = converters[translate_mode];
+		const auto& Converter = converters[translate_mode];
 
 		for (int64_t i = numSelections - 1; i >= 0; --i) {
 			/* get 文字選取範圍，起點與終點一致代表沒選字，跳過 */
