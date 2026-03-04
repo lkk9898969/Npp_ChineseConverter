@@ -52,7 +52,7 @@ jobs:
       run: cmake --build build --config ${{ matrix.build_configuration }} --target PACKAGE
 
     - name: Upload Artifacts
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: NppChineseConverter-${{ matrix.build_configuration }}-${{ matrix.platform }}
         path: build/Packages/NppChineseConverter-${{ matrix.build_configuration }}-${{ matrix.platform }}.zip
