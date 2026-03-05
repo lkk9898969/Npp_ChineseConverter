@@ -25,11 +25,10 @@
 #define NPP_PLUGIN_VERSION_CSV NPP_PLUGIN_VERSION_MAJOR, NPP_PLUGIN_VERSION_MINOR, NPP_PLUGIN_VERSION_PATCH, NPP_PLUGIN_VERSION_TWEAK
 
 /////////////////////////////////////////////////////////////////////////////
-// ‰∏≠Ê?? (Áπ?È´?Ôº???∞Á??) resources
+// ‰∏≠Êñá (ÁπÅÈ´îÔºåÂè∞ÁÅ£) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHT)
 LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_TRADITIONAL
-#pragma code_page(950)
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -53,7 +52,7 @@ BEGIN
     BEGIN
         BLOCK "040404b0"
         BEGIN
-            VALUE "FileDescription", "¡c¬≤¬‡¥´¥°•Û for Notepad++"
+            VALUE "FileDescription", "ÁπÅÁ∞°ËΩâÊèõÊèí‰ª∂ for Notepad++"
             VALUE "FileVersion", NPP_PLUGIN_VERSION_STRING
             VALUE "InternalName", "ChineseConverter.dll"
             VALUE "LegalCopyright", "by lkk9898969"
@@ -103,7 +102,7 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
-#endif    // ‰∏≠Ê?? (Áπ?È´?Ôº???∞Á??) resources
+#endif    // ‰∏≠Êñá (ÁπÅÈ´îÔºåÂè∞ÁÅ£) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
