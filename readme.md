@@ -17,6 +17,10 @@
 
 ## 📦 安裝方式
 
+> [!NOTE]  
+> 在Notepad++ v8.9.2之後，可以從在Notepad++內的 `外掛-->管理外掛模組`內，  
+> 搜尋`Chinese Converter`即可直接安裝。
+
 於 Release 頁面下載預先編譯好的 DLL 檔案，或是自行依下方「編譯方式」進行編譯。接著依 [Notepad++ 官網的 Install plugin manually](https://npp-user-manual.org/docs/plugins/#install-plugin-manually) 步驟進行安裝。
 
 1. 建立/進入 `Notepad++\plugins\NppChineseConverter` 資料夾（名稱需與 DLL 主檔名一致）。

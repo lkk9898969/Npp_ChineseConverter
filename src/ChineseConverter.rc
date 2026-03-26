@@ -29,7 +29,7 @@
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHT)
 LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_TRADITIONAL
-
+#pragma code_page(65001)
 /////////////////////////////////////////////////////////////////////////////
 //
 // Version
