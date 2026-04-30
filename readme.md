@@ -31,7 +31,7 @@
 > ARM64架構未經過任何測試，若使用上有遭遇問題歡迎回報。
 
 > [!NOTE]  
-> 可能會需要[Visual Studio Runtime v14](https://learn.microsoft.com/zh-tw/cpp/windows/latest-supported-vc-redist?view=msvc-170#visual-c-redistributable-v14)*(aka Microsoft Visual C++ 可轉散發套件)*
+> 可能會需要[Visual Studio Runtime v14](https://learn.microsoft.com/zh-tw/cpp/windows/latest-supported-vc-redist?view=msvc-170#visual-c-v14-redistributable)*(aka Microsoft Visual C++ 可轉散發套件)*
 
 
 ## 🚀 使用方式
