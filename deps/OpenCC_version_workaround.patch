@@ -1,0 +1,13 @@
+diff --git a/deps/OpenCC/CMakeLists.txt b/deps/OpenCC/CMakeLists.txt
+index 9b661b3..ec26f8a 100644
+--- a/deps/OpenCC/CMakeLists.txt
++++ b/deps/OpenCC/CMakeLists.txt
+@@ -45,7 +45,7 @@ set (PACKAGE_BUGREPORT https://github.com/BYVoid/OpenCC/issues)
+ 
+ # Derive version from Git tags (falls back to hardcoded default when Git is unavailable)
+ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+-include(GitVersion)
++# include(GitVersion)
+ 
+ set(CPACK_SOURCE_PACKAGE_FILE_NAME
+   "${PACKAGE_NAME}-${OPENCC_VERSION_MAJOR}.${OPENCC_VERSION_MINOR}.${OPENCC_VERSION_REVISION}"

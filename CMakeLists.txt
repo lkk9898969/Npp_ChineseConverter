@@ -28,6 +28,29 @@ set(ENABLE_DOCUMENTATION OFF CACHE BOOL "" FORCE)
 set(USE_SYSTEM_MARISA OFF CACHE BOOL "" FORCE)
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 
+
+# OpenCC Configuration after v1.3.0 need GitVersion
+message(STATUS "Configuring OpenCC with GitVersion...")
+include(GitVersion OPTIONAL RESULT_VARIABLE GIT_RESULT)
+if(NOT GIT_RESULT)
+    message(WARNING "GitVersion module not found. OpenCC Version information may be inaccurate.")
+    set(OPENCC_VERSION "1.3.1")  # Fallback to hardcoded version
+
+    # 將 '.' 替換為 ';' 使其變成一個 list
+    string(REPLACE "." ";" VERSION_LIST "${OPENCC_VERSION}")
+
+    # 現在 VERSION_LIST 變成了一個 list: 1;3;0
+    list(GET VERSION_LIST 0 OPENCC_VERSION_MAJOR)
+    list(GET VERSION_LIST 1 OPENCC_VERSION_MINOR)
+    list(GET VERSION_LIST 2 OPENCC_VERSION_REVISION)
+
+    execute_process(
+        COMMAND git apply "${CMAKE_CURRENT_SOURCE_DIR}/deps/OpenCC_version_workaround.patch"
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/"
+    )
+endif()
+
+
 add_subdirectory(deps/OpenCC EXCLUDE_FROM_ALL)
 
 # Generate OpenCC dictionaries
