@@ -156,8 +156,8 @@
     #define    IDM_EDIT_SENTENCECASE_BLEND                      (IDM_EDIT + 70)
     #define    IDM_EDIT_INVERTCASE                              (IDM_EDIT + 71)
     #define    IDM_EDIT_RANDOMCASE                              (IDM_EDIT + 72)
-    #define    IDM_EDIT_OPENASFILE                              (IDM_EDIT + 73)
-    #define    IDM_EDIT_OPENINFOLDER                            (IDM_EDIT + 74)
+    #define    IDM_EDIT_OPENSELECTEDFILETOEDIT                  (IDM_EDIT + 73)
+    #define    IDM_EDIT_OPENSELECTEDFILEFOLDERINEXPLORER        (IDM_EDIT + 74)
     #define    IDM_EDIT_SEARCHONINTERNET                        (IDM_EDIT + 75)
     #define    IDM_EDIT_CHANGESEARCHENGINE                      (IDM_EDIT + 76)
     #define    IDM_EDIT_REMOVE_CONSECUTIVE_DUP_LINES            (IDM_EDIT + 77)
@@ -631,6 +631,7 @@
     #define    IDM_TOOL_SHA512_GENERATEINTOCLIPBOARD    (IDM_TOOL + 12)
 
 #define    IDM_EXECUTE  (IDM + 9000)
+#define    IDM_EXECUTE_VALIDATE_SHORTCUTSXML          (IDM_EXECUTE + 1)
 
 #define IDM_SYSTRAYPOPUP     (IDM + 3100)
     #define IDM_SYSTRAYPOPUP_ACTIVATE         (IDM_SYSTRAYPOPUP + 1)
