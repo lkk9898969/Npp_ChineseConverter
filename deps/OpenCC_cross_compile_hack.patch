@@ -1,0 +1,39 @@
+diff --git a/deps/OpenCC/data/CMakeLists.txt b/deps/OpenCC/data/CMakeLists.txt
+index fc8028d5..3614ff6f 100644
+--- a/deps/OpenCC/data/data/CMakeLists.txt
++++ b/deps/OpenCC/data/CMakeLists.txt
+@@ -1,7 +1,14 @@
+ find_package(Python3 REQUIRED COMPONENTS Interpreter)
+ 
+-set(OPENCC_DICT_BIN opencc_dict)
+-set(OPENCC_BIN opencc)
++if(NOT DEFINED OPENCC_DICT_BIN)
++  set(OPENCC_DICT_BIN opencc_dict)
++endif()
++if(NOT DEFINED OPENCC_BIN)
++  set(OPENCC_BIN opencc)
++endif()
++if(NOT DEFINED OPENCC_BIN_PATH)
++  set(OPENCC_BIN_PATH $<TARGET_FILE:${OPENCC_BIN}>)
++endif()
+ set(DICT_REVERSE_BIN "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/scripts/reverse.py")
+ set(DICT_EXTRACT_TOFU_RISK_BIN "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/scripts/extract_tofu_risk.py")
+ set(DICT_GENERATE_ST_PHRASES_BIN "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/scripts/generate_st_phrases_from_regional_phrases.py")
+@@ -84,7 +91,7 @@ set(
+     --input ${DICT_DIR}/HKPhrases.txt
+     --input ${DICT_DIR}/TWPhrases.txt
+     --output STPhrases_GeneratedFromRegionalPhrases.txt
+-    --opencc $<TARGET_FILE:${OPENCC_BIN}>
++    --opencc ${OPENCC_BIN_PATH}
+     --config ${CMAKE_CURRENT_SOURCE_DIR}/config/t2s.json
+     --dict-dir ${DICT_GENERATED_DIR}
+ )
+@@ -123,7 +130,7 @@ add_custom_target(
+   COMMAND
+     ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:libopencc>" "$<TARGET_FILE_DIR:${OPENCC_DICT_BIN}>"
+ )
+-if (WIN32)
++if (WIN32 AND TARGET ${OPENCC_DICT_BIN})
+   set(DICT_WIN32_DEPENDS copy_libopencc_to_dir_of_opencc_dict)
+ else()
+   set(DICT_WIN32_DEPENDS)

@@ -24,23 +24,33 @@ jobs:
       uses: actions/checkout@v6
       with:
         submodules: recursive
+    
+    - name: Fix OpenCC invalid options in CMakeLists.txt
+      run: |
+        git apply deps/OpenCC_fix_invalid_options.patch
 
     - name: OpenCC ARM64 Cross-Compile Hack
       if: matrix.platform == 'ARM64'
       run: |
-        git apply deps/OpenCC_temporary.patch
-        cmake -S deps/OpenCC -B build-native-tools -G "Visual Studio 17 2022" -A x64 -T ClangCL
+        git apply deps/OpenCC_cross_compile_hack.patch
+        cmake -S deps/OpenCC -B build-native-tools -G "Visual Studio 18 2026" -A x64 -T ClangCL
         cmake --build build-native-tools --config Release --target Dictionaries
 
     - name: Configure CMake
       shell: pwsh
       run: |
-        $cmakeArgs = @("-B", "build", "-G", "Visual Studio 17 2022", "-A", "${{ matrix.cmake_arch }}", "-DCMAKE_BUILD_TYPE=${{ matrix.build_configuration }}", "-T", "ClangCL")
+        $cmakeArgs = @("-B", "build", "-G", "Visual Studio 18 2026", "-A", "${{ matrix.cmake_arch }}", "-DCMAKE_BUILD_TYPE=${{ matrix.build_configuration }}", "-T", "ClangCL")
         
         if ("${{ matrix.platform }}" -eq "ARM64") {
-          $nativeTool = Join-Path (Get-Location) "build-native-tools\src\tools\Release\opencc_dict.exe"
-          Write-Host "Using native opencc_dict at: $nativeTool"
-          $cmakeArgs += "-DOPENCC_DICT_BIN=$nativeTool"
+
+          $nativeDictTool = Join-Path (Get-Location) "build-native-tools\src\tools\Release\opencc_dict.exe"
+          $nativeOpenccTool = Join-Path (Get-Location) "build-native-tools\src\Release\opencc.exe"
+
+          Write-Host "Using native opencc_dict at: $nativeDictTool"
+          Write-Host "Using native opencc at: $nativeOpenccTool"
+          
+          $cmakeArgs += "-DOPENCC_DICT_BIN=$nativeDictTool"
+          $cmakeArgs += "-DOPENCC_BIN_PATH=$nativeOpenccTool"
         }
         
         cmake @cmakeArgs

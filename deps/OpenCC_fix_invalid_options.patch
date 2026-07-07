@@ -1,0 +1,17 @@
+diff --git a/deps/OpenCC/CMakeLists.txt b/deps/OpenCC/CMakeLists.txt
+index 1e61c300..5231def0 100644
+--- a/deps/OpenCC/CMakeLists.txt
++++ b/deps/OpenCC/CMakeLists.txt
+@@ -235,10 +235,8 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+     add_compile_options(-O0 -g3)
+   endif ()
+ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+-  add_definitions(
+-    /W4
+-    /D "_CRT_SECURE_NO_WARNINGS"
+-  )
++  add_definitions( /D "_CRT_SECURE_NO_WARNINGS" )
++  add_compile_options( /W4 )
+ endif()
+ 
+ if (NOT BUILD_SHARED_LIBS)
