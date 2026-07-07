@@ -28,12 +28,19 @@ index fc8028d5..3614ff6f 100644
      --config ${CMAKE_CURRENT_SOURCE_DIR}/config/t2s.json
      --dict-dir ${DICT_GENERATED_DIR}
  )
-@@ -123,7 +130,7 @@ add_custom_target(
+@@ -116,6 +123,7 @@ set(
+   ${DICT_REVERSE_BIN} ${DICT_JPShinjitaiCharactersRev_GENERATING_INPUT} JPShinjitaiCharactersRev.txt
+ )
+ 
++if (WIN32 AND TARGET ${OPENCC_DICT_BIN})
+ add_custom_target(
+   copy_libopencc_to_dir_of_opencc_dict
+   COMMENT
+@@ -123,7 +131,6 @@ add_custom_target(
    COMMAND
      ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:libopencc>" "$<TARGET_FILE_DIR:${OPENCC_DICT_BIN}>"
  )
 -if (WIN32)
-+if (WIN32 AND TARGET ${OPENCC_DICT_BIN})
    set(DICT_WIN32_DEPENDS copy_libopencc_to_dir_of_opencc_dict)
  else()
    set(DICT_WIN32_DEPENDS)
