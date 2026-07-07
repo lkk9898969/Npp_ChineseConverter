@@ -44,7 +44,7 @@ jobs:
         if ("${{ matrix.platform }}" -eq "ARM64") {
 
           $nativeDictTool = Join-Path (Get-Location) "build-native-tools\src\tools\Release\opencc_dict.exe"
-          $nativeOpenccTool = Join-Path (Get-Location) "build-native-tools\src\Release\opencc.exe"
+          $nativeOpenccTool = Join-Path (Get-Location) "build-native-tools\src\tools\Release\opencc.exe"
 
           Write-Host "Using native opencc_dict at: $nativeDictTool"
           Write-Host "Using native opencc at: $nativeOpenccTool"
