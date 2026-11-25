@@ -16,7 +16,7 @@ def update_files(new_sdk_path: Path, target_dir: Path, extension: str):
         return
 
     # 遞迴搜尋新 SDK 目錄中符合副檔名的檔案 (避免檔案在子資料夾找不到)
-    new_files = list(new_sdk_path.rglob(f"*{extension}"))
+    new_files = list(new_sdk_path.glob(f"**/C/*{extension}"))
 
     updated_count = 0
     for new_file in new_files:

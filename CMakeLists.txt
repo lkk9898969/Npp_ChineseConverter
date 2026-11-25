@@ -23,8 +23,8 @@ if(GIT_FOUND AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.git")
 endif()
 
 # Initialize OpenCC
-set(ENABLE_TESTING OFF CACHE BOOL "" FORCE)
-set(ENABLE_DOCUMENTATION OFF CACHE BOOL "" FORCE)
+set(ENABLE_GTEST OFF CACHE BOOL "" FORCE)
+set(BUILD_DOCUMENTATION OFF CACHE BOOL "" FORCE)
 set(USE_SYSTEM_MARISA OFF CACHE BOOL "" FORCE)
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 
@@ -52,6 +52,16 @@ set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 
 
 add_subdirectory(deps/OpenCC EXCLUDE_FROM_ALL)
+
+# When cross compiling for an architecture the host cannot execute (e.g. ARM64
+# on an x64 host), OpenCC turns OPENCC_BUILD_DATA off unless host-built tools
+# are provided, so the Dictionaries target would be missing.
+if(NOT TARGET Dictionaries)
+    message(FATAL_ERROR
+        "OpenCC dictionaries are disabled (cross compiling without host tools). "
+        "Build opencc_dict and opencc for the host from deps/OpenCC and pass "
+        "-DOPENCC_DICT_EXECUTABLE=<path> -DOPENCC_CLI_EXECUTABLE=<path>.")
+endif()
 
 # Generate OpenCC dictionaries
 find_package(Python REQUIRED COMPONENTS Interpreter)

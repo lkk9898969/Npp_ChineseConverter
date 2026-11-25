@@ -25,16 +25,11 @@ jobs:
       with:
         submodules: recursive
     
-    - name: Fix OpenCC invalid options in CMakeLists.txt
-      run: |
-        git apply deps/OpenCC_fix_invalid_options.patch
-
-    - name: OpenCC ARM64 Cross-Compile Hack
+    - name: Build host OpenCC tools (for ARM64 cross build)
       if: matrix.platform == 'ARM64'
       run: |
-        git apply deps/OpenCC_cross_compile_hack.patch
-        cmake -S deps/OpenCC -B build-native-tools -G "Visual Studio 18 2026" -A x64 -T ClangCL
-        cmake --build build-native-tools --config Release --target Dictionaries
+        cmake -S deps/OpenCC -B build-native-tools -G "Visual Studio 18 2026" -A x64 -T ClangCL -DBUILD_SHARED_LIBS=OFF
+        cmake --build build-native-tools --config Release --target opencc_dict opencc
 
     - name: Configure CMake
       shell: pwsh
@@ -49,8 +44,8 @@ jobs:
           Write-Host "Using native opencc_dict at: $nativeDictTool"
           Write-Host "Using native opencc at: $nativeOpenccTool"
           
-          $cmakeArgs += "-DOPENCC_DICT_BIN=$nativeDictTool"
-          $cmakeArgs += "-DOPENCC_BIN_PATH=$nativeOpenccTool"
+          $cmakeArgs += "-DOPENCC_DICT_EXECUTABLE=$nativeDictTool"
+          $cmakeArgs += "-DOPENCC_CLI_EXECUTABLE=$nativeOpenccTool"
         }
         
         cmake @cmakeArgs
