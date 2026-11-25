@@ -79,10 +79,8 @@
      cmake --build build --config Release --target NppChineseConverter
      ```
 
-> [!WARNING]  
-> ARM64架構目前是由amd64交叉編譯實現，由於OpenCC在編譯過程需要運行編譯出的執行檔，  
-> 而在進行Cross Compile時會因為編譯出的執行檔是ARM架構無法執行導致編譯失敗，
-> 因此目前作者先用暫時的patch workaround解決。
+> [!INFO]  
+> 交叉編譯的流程可參考CI workflow (amd64 to ARM64)
 
 ## 🔄 更新子模組或字典
 若需更新任何子模組或 OpenCC 字典：
