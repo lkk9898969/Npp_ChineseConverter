@@ -79,7 +79,7 @@
      cmake --build build --config Release --target NppChineseConverter
      ```
 
-> [!INFO]  
+> [!NOTE]  
 > 交叉編譯的流程可參考CI workflow (amd64 to ARM64)
 
 ## 🔄 更新子模組或字典
